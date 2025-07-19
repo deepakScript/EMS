@@ -24,6 +24,7 @@ const AuthContext = ({ children }) => {
                     }
                 } else {
                     setUser(null);
+                    setLoading(false);
                 }
             } catch (error) {
                 console.error("Verification error:", error);
