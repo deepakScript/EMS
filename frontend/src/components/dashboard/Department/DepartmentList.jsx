@@ -7,6 +7,14 @@ import axios from 'axios';
 const DepartmentList = () => {
   const [departments, setDepartments] = useState([]);
   const [depLoading, setDepLoading] = useState(false);
+  const [filteredDepartments, setFilteredDepartments] = useState([])
+
+
+  const onDepartmentDelete = async (id) => {
+    const data =  departments.filter((dep) => dep._id !== id);
+    setDepartments(data);
+    setDepLoading(false);
+  };
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -24,15 +32,14 @@ const DepartmentList = () => {
             _id: dep._id,
             sno: sno++,
             dep_name: dep.dep_name,
-            action: <DepartmentButtons />,
+            action: <DepartmentButtons id={dep._id} onDepartmentDelete={onDepartmentDelete} />,
           }));
           setDepartments(data); // ✅ Save the data to state
+          setFilteredDepartments(data)
         }
       } catch (error) {
         if (error.response && error.response.data.error) {
           alert(error.response.data.error);
-        } else {
-          alert("An error occurred while fetching departments.");
         }
       } finally {
         setDepLoading(false);
@@ -41,6 +48,13 @@ const DepartmentList = () => {
 
     fetchDepartments();
   }, []);
+
+  const filterDepartments = (e) => {
+    const records = departments.filter((dep) => 
+      dep.dep_name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredDepartments(records)
+  };
 
   return (
     <>
@@ -56,6 +70,7 @@ const DepartmentList = () => {
               type="text"
               placeholder="Search by Dep Name"
               className="px-4 py-0.5 border border-gray-300 rounded"
+              onChange={filterDepartments}
             />
             <Link
               to="/admin-dashboard/add-department"
@@ -67,7 +82,8 @@ const DepartmentList = () => {
           <div className='mt-5'>
             <DataTable
               columns={colomns}
-              data={departments}
+              data={filteredDepartments}
+              pagination
             />
           </div>
         </div>
