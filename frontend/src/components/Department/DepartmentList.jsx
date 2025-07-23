@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
-import { colomns, DepartmentButtons } from '../../../utils/DepartmentHelper';
+import { colomns, DepartmentButtons } from '../../utils/DepartmentHelper';
 import axios from 'axios';
 
 const DepartmentList = () => {
